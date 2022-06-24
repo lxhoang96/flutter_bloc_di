@@ -28,6 +28,7 @@ class MyApp extends StatelessWidget {
       routes: RouteSetting.pages,
       navigatorObservers: [ClearFocusOnPush()],
       debugShowCheckedModeBanner: false,
+      // onGenerateRoute: (settings) => ,
       theme: ThemeData(
           fontFamily: 'SFProDisplay',
           dividerColor: Colors.transparent,

@@ -13,10 +13,10 @@ import 'package:flutter_bloc_di/app/presentation/pages/test_screen1/test_viewmod
 import 'route_name.dart';
 
 class RouteSetting {
-  static final PreferencesStorageInterfaces _storage = PreferentStorage();
-
   static Map<String, Widget Function(BuildContext)> pages = {
     RouteName.test_screen: (context) {
+      final PreferencesStorageInterfaces _storage = PreferentStorage();
+
       final BusinessExampleInterfaces _usecases = BusinessUsecases();
 
       TestViewModel _viewModelInterfaces =
@@ -26,6 +26,13 @@ class RouteSetting {
       return TestView(_testController);
     },
     RouteName.test_screen1: (context) {
+      final arguments = ModalRoute.of(context)!.settings.arguments as PreferencesStorageInterfaces?;
+      PreferencesStorageInterfaces _storage;
+      if (arguments != null) {
+        _storage = arguments;
+      } else {
+        _storage = PreferentStorage();
+      }
       TestViewModel1 _viewModelInterfaces = TestViewModel1(storage: _storage);
       TestController1 _testController =
           TestController1(viewModel: _viewModelInterfaces);
@@ -36,11 +43,23 @@ class RouteSetting {
 
 class AppRouter {
   static final navigatorKey = GlobalKey<NavigatorState>();
-  static push(Widget page) => navigatorKey.currentState?.push(
-        MaterialPageRoute(builder: (_) => page),
-      );
+  static push(Widget page) {
+    navigatorKey.currentState?.push(
+      MaterialPageRoute(builder: (_) => page),
+    );
+  }
 
-  static pushNamed(String name) => navigatorKey.currentState?.pushNamed(name);
+  static pushNamed(String name, {Object? argument}) {
+    navigatorKey.currentState?.pushNamed(name, arguments: argument);
+  }
 
-  static pop() => navigatorKey.currentState?.pop();
+  static pop() {
+    if (navigatorKey.currentState?.canPop() ?? false) {
+      navigatorKey.currentState?.pop();
+    }
+  }
+
+  static popUntilNamed(String name) {
+    navigatorKey.currentState?.popUntil(ModalRoute.withName(name));
+  }
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc_di/app/data/data_interfaces/local_interfaces.dart';
 import 'package:flutter_bloc_di/app/domain/business_interfaces/business_interfaces.dart';
 import 'package:flutter_bloc_di/app/presentation/view_interfaces/test_viewmodel_interfaces.dart';
@@ -12,16 +14,24 @@ class TestViewModel implements TestViewModelInterfaces {
   }
   final _testStream = BehaviorSubject<bool>.seeded(false);
   Stream<bool> get testValue => _testStream.stream;
+  bool get currentTest => _testStream.value;
+  late Timer _timer;
+  int startTime = 60;
 
   void onInit() async {
-    await Future.delayed(Duration(seconds: 2));
     bool _value = await workingExample();
-    _testStream.sink.add(_value);
+    _timer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
+      if (startTime == 0) _timer.cancel();
+      startTime--;
+      if (startTime % 3 == 0) {
+        _value = !_value;
+        _testStream.sink.add(_value);
+      }
+    });
   }
 
   @override
   Future<bool> workingExample() async {
-    await Future.delayed(Duration(seconds: 2));
     String? _localData = await storage.getItemExample('test');
     return await usecases.businessExampleBool(_localData);
   }
@@ -29,6 +39,4 @@ class TestViewModel implements TestViewModelInterfaces {
   void dispose() {
     _testStream.close();
   }
-
-  
 }

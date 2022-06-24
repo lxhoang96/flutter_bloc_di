@@ -15,7 +15,6 @@ class TestViewModel1 implements TestViewModel1Interfaces {
 
   void dispose() {
     _testStream.close();
-    print(_testStream.isClosed);
 
   }
 

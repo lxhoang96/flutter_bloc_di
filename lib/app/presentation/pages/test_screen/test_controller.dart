@@ -7,7 +7,9 @@ class TestController {
   TestController({required this.viewModel});
 
   void toTestView1() {
-    AppRouter.pushNamed(RouteName.test_screen1);
+    AppRouter.pushNamed(RouteName.test_screen1, argument: {
+      'storage': viewModel.storage,
+      'test': viewModel.currentTest
+    });
   }
-
 }

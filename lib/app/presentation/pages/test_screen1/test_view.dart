@@ -15,9 +15,9 @@ class TestView1 extends StatelessWidget with RouteAware {
         builder: (context, AsyncSnapshot<bool> snapshot) {
           Color _color;
           if (snapshot.hasData && snapshot.data!) {
-            _color = AppTheme.darkText;
+            _color = AppTheme.blue;
           } else {
-            _color = AppTheme.backgroundColor;
+            _color = AppTheme.colorRed;
           }
 
           return InkWell(
